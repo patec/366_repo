@@ -17,7 +17,7 @@ def main():
     # split on the \n
     data_lines = data_raw.split('\n')
 
-    spec_insert = 'INSERT INTO Specialties (parentId, id, title, code, description) VALUES\n'
+    spec_insert = 'INSERT INTO Specialties (ParentId, Id, Title, Code, Description) VALUES\n'
 
     # 1 so that we dont get the titles
     for i in range(1,len(data_lines)):

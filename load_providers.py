@@ -16,9 +16,9 @@ def main():
     data_lines = data_raw.split('\n')
 
     # insert statements
-    phone_insert = 'INSERT INTO PhoneNumbers (sourceId, phoneNumber)'
-    prov_insert = 'INSERT INTO SourceProviders (id, type, name, gender, dob, isSP, primarySpecialty, secondarySpecialty) VALUES\n'
-    address_insert = 'INSERT INTO Address (sourceId, type, street, unit, city, region, postCode, county, country)\n'
+    phone_insert = 'INSERT INTO PhoneNumbers (SourceId, PhoneNumber)'
+    prov_insert = 'INSERT INTO SourceProviders (Id, Type, Name, Gender, DoB, IsSoleProprietor, PrimarySpecialty, SecondarySpecialty) VALUES\n'
+    address_insert = 'INSERT INTO Address (SourceId, Type, Street, Unit, City, Region, PostCode, County, Country)\n'
     
     for i in range(1, len(data_lines)):
         
