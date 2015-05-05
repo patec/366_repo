@@ -1,6 +1,6 @@
 '''
 CREATE TABLE Specialties (
-parent_id INT,
+parentId INT,
 id INT,
 title VARCHAR(1000),
 code VARCHAR(100),
@@ -17,7 +17,7 @@ def main():
     # split on the \n
     data_lines = data_raw.split('\n')
 
-    spec_insert = 'INSERT INTO Specialties (parent_id, id, title, code, description) VALUES\n'
+    spec_insert = 'INSERT INTO Specialties (parentId, id, title, code, description) VALUES\n'
 
     # 1 so that we dont get the titles
     for i in range(1,len(data_lines)):
