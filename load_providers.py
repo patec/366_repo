@@ -17,7 +17,7 @@ def main():
 
     # insert statements
     phone_insert = 'INSERT INTO PhoneNumbers (sourceId, phoneNumber)'
-    prov_insert = 'INSERT INTO SourceProviders (id, type, name, gender, dob, isSP, pSpec, sSpec) VALUES\n'
+    prov_insert = 'INSERT INTO SourceProviders (id, type, name, gender, dob, isSP, primarySpecialty, secondarySpecialty) VALUES\n'
     address_insert = 'INSERT INTO Address (sourceId, type, street, unit, city, region, postCode, county, country)\n'
     
     for i in range(1, len(data_lines)):
