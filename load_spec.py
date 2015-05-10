@@ -8,6 +8,7 @@ description VARCHAR(1000));
 '''
 import sys
 
+
 def main():
     # open the file and read it into a string
     f = open(sys.argv[1],'r')
@@ -17,7 +18,7 @@ def main():
     # split on the \n
     data_lines = data_raw.split('\n')
 
-    spec_insert = 'INSERT INTO Specialties (ParentId, Id, Title, Code, Description) VALUES\n'
+    spec_insert = 'INSERT INTO Specialities (ParentId, Id, Title, Code, Description) VALUES\n'
 
     # 1 so that we dont get the titles
     for i in range(1,len(data_lines)):
