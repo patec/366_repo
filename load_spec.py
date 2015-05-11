@@ -18,7 +18,7 @@ def main():
     # split on the \n
     data_lines = data_raw.split('\n')
 
-    spec_insert = 'INSERT INTO Specialities (ParentId, Id, Title, Code, Description) VALUES\n'
+    spec_insert = 'INSERT INTO Specialities (ParentID, ID, Title, Code, URL) VALUES\n'
 
     # 1 so that we dont get the titles
     for i in range(1,len(data_lines)):
@@ -27,11 +27,12 @@ def main():
             #if there is no parent id its id is now -1
             if len(data[0]) == 0:
                 data[0] = '-1'
-            spec_insert += '(' + data[0] + ',' + data[1] + ',"' + data[2] + '","' + data[3] + '","' + data[4].strip() + '")'
-            if i == len(data_lines) - 2: # hack for newline
-                spec_insert += ';'
-            else:
-                spec_insert += ',\n'
+            if len(data[3]) != 0:
+               spec_insert += '(' + data[0] + ',' + data[1] + ',"' + data[2] + '","' + data[3] + '","' + data[4].strip() + '")'
+               if i == len(data_lines) - 2: # hack for newline
+                   spec_insert += ';'
+               else:
+                   spec_insert += ',\n'
 
     f = open(sys.argv[2],'w')
     f.write(spec_insert)
