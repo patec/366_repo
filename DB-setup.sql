@@ -1,12 +1,11 @@
 CREATE TABLE IF NOT EXISTS Specialities(
 	ParentID		INT,
 	ID			INT,
-	Title			VARCHAR(50),
+	Title			VARCHAR(100),
 	Code			VARCHAR(30),
 	URL			VARCHAR(1000),
 	PRIMARY KEY(ID)
 );
-
 CREATE TABLE IF NOT EXISTS SourceProviders(
 	ID			INT NOT NULL,
 	Type			VARCHAR(12) NOT NULL,
@@ -16,21 +15,15 @@ CREATE TABLE IF NOT EXISTS SourceProviders(
 	Gender			VARCHAR(1),
 	PrimarySpeciality	INT,
 	SecondarySpeciality	INT, 
-	PRIMARY KEY(ID),
-	FOREIGN KEY(PrimarySpeciality) REFERENCES Specialities(ID),
-	FOREIGN KEY(SecondarySpeciality) REFERENCES Specialities(ID)
+	PRIMARY KEY(ID)
+	/*FOREIGN KEY(PrimarySpeciality) REFERENCES Specialities(ID),
+	FOREIGN KEY(SecondarySpeciality) REFERENCES Specialities(ID)*/
 );
-
 CREATE TABLE IF NOT EXISTS PhoneNumbers(
 	SourceID		INT,
 	PhoneNumber 		VARCHAR(20),
 	FOREIGN KEY(sourceID) REFERENCES SourceProviders(ID)
 );
-
-
-
-
-
 CREATE TABLE IF NOT EXISTS Addresses(
 	SourceID			INT,
 	Type			CHAR(1),
@@ -44,7 +37,6 @@ CREATE TABLE IF NOT EXISTS Addresses(
 	PRIMARY KEY(SourceID, Type),
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID)
 );
-
 CREATE TABLE IF NOT EXISTS MasterProviders(
 	ID			INT UNIQUE NOT NULL AUTO_INCREMENT,
 	Type			VARCHAR(12) NOT NULL,
@@ -55,7 +47,6 @@ CREATE TABLE IF NOT EXISTS MasterProviders(
 	Established		DATE, 
 	PRIMARY KEY(ID)
 );
-
 CREATE TABLE IF NOT EXISTS Audit(
 	AuditNum		INT UNIQUE NOT NULL AUTO_INCREMENT,
 	Date			DATE,
@@ -64,7 +55,6 @@ CREATE TABLE IF NOT EXISTS Audit(
 	Active			BOOLEAN,
     	PRIMARY KEY(AuditNum)
 );
-
 CREATE TABLE IF NOT EXISTS MasteredSpeciality1(
 	MasterID		INT,
 	Speciality		INT,
@@ -72,7 +62,6 @@ CREATE TABLE IF NOT EXISTS MasteredSpeciality1(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(Speciality) REFERENCES Specialities(ID)
 );
-
 CREATE TABLE IF NOT EXISTS MasteredSpeciality2(
 	MasterID 		INT,
 	Speciality 		INT,
@@ -80,7 +69,6 @@ CREATE TABLE IF NOT EXISTS MasteredSpeciality2(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(Speciality) REFERENCES Specialities(ID)
 );
-
 CREATE TABLE IF NOT EXISTS Crosswalk(
 	SourceID		INT,
 	MasterID		INT,
@@ -88,7 +76,6 @@ CREATE TABLE IF NOT EXISTS Crosswalk(
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID),
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID)
 );
-
 CREATE TABLE IF NOT EXISTS MasteredWorksAt(
 	MasterID		INT,
 	SourceID		INT,
@@ -96,8 +83,6 @@ CREATE TABLE IF NOT EXISTS MasteredWorksAt(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID)
 );
-
-
 CREATE TABLE IF NOT EXISTS ReceivesMasteredMailAt(
 	MasterID		INT,
 	SourceID		INT,
@@ -105,7 +90,6 @@ CREATE TABLE IF NOT EXISTS ReceivesMasteredMailAt(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID)
 );
-
 CREATE TABLE IF NOT EXISTS Changes(
 	AuditNumber		INT,
 	MasterID		INT,
@@ -115,9 +99,6 @@ CREATE TABLE IF NOT EXISTS Changes(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID)
 );
-
-
-
 CREATE TABLE IF NOT EXISTS MasteredHasPhoneNumber(
 	MasterID		INT,
 	SourceID		INT,
@@ -125,9 +106,3 @@ CREATE TABLE IF NOT EXISTS MasteredHasPhoneNumber(
 	FOREIGN KEY(MasterID) REFERENCES MasterProviders(ID),
 	FOREIGN KEY(SourceID) REFERENCES PhoneNumbers(SourceID)
 );
-
-
-
-
-
-

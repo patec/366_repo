@@ -1,47 +1,99 @@
-'''
-CREATE TABLE Specialties (
-parentId INT,
-id INT,
-title VARCHAR(1000),
-code VARCHAR(100),
-description VARCHAR(1000));
-'''
 import sys
-
+import MySQLdb as mdb
 
 def main():
-    # open the file and read it into a string
-    f = open(sys.argv[1],'r')
-    data_raw = f.read()
-    f.close()
 
-    # split on the \n
-    data_lines = data_raw.split('\n')
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
 
-    spec_insert = 'INSERT INTO Specialities (ParentID, ID, Title, Code, URL) VALUES\n'
+    with con:
+       
+        cur = con.cursor()
 
-    # 1 so that we dont get the titles
-    for i in range(1,len(data_lines)):
-        data = data_lines[i].strip().split('\t')
-        if len(data) == 5: # for the last line
-            #if there is no parent id its id is now -1
-            if len(data[0]) == 0:
-                data[0] = '-1'
-            if len(data[3]) != 0:
-               spec_insert += '(' + data[0] + ',' + data[1] + ',"' + data[2] + '","' + data[3] + '","' + data[4].strip() + '")'
-               if i == len(data_lines) - 2: # hack for newline
-                   spec_insert += ';'
-               else:
-                   spec_insert += ',\n'
+        # clean up
+        f = open('DB-cleanup.sql','r')
+        sql = f.read()
+        f.close()
+        sql = sql.split(';')[:-1]
+        for s in sql:
+            cur.execute(s)
+       
+        # set up
+        f = open('DB-setup.sql','r')
+        sql = f.read()
+        f.close()
+        sql = sql.split(';')[:-1]
+        for s in sql:
+            cur.execute(s)
 
-    f = open(sys.argv[2],'w')
-    f.write(spec_insert)
-    f.close()
+        # open the file and read it into a string
+        f = open('Specialities.tsv','r')
+        data_raw = f.read()
+        f.close()
 
-    print 'Done'
+        data_lines = data_raw.split('\n')[:-1]
+        
+        for i in range(1,len(data_lines)):
+            data = data_lines[i].split('\t')
+            cd = []
+            for d in data:
+                d = d.strip()
+                if d == '':
+                    d = None
+                cd.append(d)
+        
+            parentid = cd[0]
+            id = cd[1]
+            title = cd[2]
+            code = cd[3]
+            url = cd[4]
+            cur.execute('INSERT INTO Specialities VALUES(%s,%s,%s,%s,%s)',(parentid,id,title,code,url))
+        
+        # open the file and read it into a string
+        f = open('Providers.tsv','r')
+        data_raw = f.read()
+        f.close()
+        
+        data_lines = data_raw.split('\n')[:-1]
+        
+        for i in range(1,len(data_lines)):
+            data = data_lines[i].split('\t')
+            cd = []
+            for d in data:
+                d = d.strip()
+                if d == '':
+                    d = None
+                cd.append(d)
+            id = cd[0]
+            type = cd[1]
+            name = cd[2] 
+            gender = cd[3] 
+            dob = cd[4] 
+            isp = cd[5]
+            m_street = cd[6]
+            m_unit = cd[7]
+            m_city = cd[8] 
+            m_region = cd[9] 
+            m_postcode = cd[10]
+            m_county = cd[11]
+            m_country = cd[12]
+            p_street = cd[13]
+            p_unit = cd[14]
+            p_city = cd[15] 
+            p_region = cd[16] 
+            p_postcode = cd[17]
+            p_county = cd[18]
+            p_country = cd[19]
+            phone = cd[20]
+            p_spec = cd[21] 
+            s_spec = cd[22] 
+
+            cur.execute('INSERT INTO PhoneNumber VALUES(%s,%s)',(id,phone))
+            cur.execute('INSERT INTO SourceProviders VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',(id,type,name,gender,dob,isp,p_spec,s_spec))
+            cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'m',m_street,m_city,m_country,m_postcode,m_unit,m_unit,m_region))
+            cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'p',p_street,p_city,p_country,p_postcode,p_unit,p_unit,p_region))
+
+    con.commit()
+    con.close()
             
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print 'Usage file_to_load file_to_create'
-        sys.exit(1)
     main()
