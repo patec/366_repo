@@ -1,7 +1,7 @@
 import sys
 import MySQLdb as mdb
 
-def main():
+def load():
 
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
 
@@ -32,6 +32,7 @@ def main():
 
         data_lines = data_raw.split('\n')[:-1]
         
+        # insert all of the specialties data
         for i in range(1,len(data_lines)):
             data = data_lines[i].split('\t')
             cd = []
@@ -47,6 +48,9 @@ def main():
             code = cd[3]
             url = cd[4]
             cur.execute('INSERT INTO Specialities VALUES(%s,%s,%s,%s,%s)',(parentid,id,title,code,url))
+            
+            if i % 1000 == 0:
+                print 'Inserted ' + str(i) + ' rows...'
         
         # open the file and read it into a string
         f = open('Providers.tsv','r')
@@ -55,6 +59,7 @@ def main():
         
         data_lines = data_raw.split('\n')[:-1]
         
+        # insert all of the source providers data
         for i in range(1,len(data_lines)):
             data = data_lines[i].split('\t')
             cd = []
@@ -96,10 +101,65 @@ def main():
                 cur.execute('INSERT INTO PhoneNumbers VALUES(%s,%s)',(id,phone))
    
             if i % 1000 == 0:
-                print i
+                print 'Inserted ' + str(i) + ' rows...'
 
     con.commit()
     con.close()
+
+def match():
+    
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
+
+    with con:
+       
+        cur = con.cursor()
+    
+        cur.execute('SELECT * FROM SourceProviders')
+        
+        rows = {}
+        names = {}
+        master = {}
+        m_index = 1
+        
+        row = cur.fetchone()
+        #i = 0
+        #while row:
+        for i in range(1,2000):
+            cur_id = row[0]
+            cur_name = row[2]
+            
+            if cur_name in names:
+                
+                for r in rows:
+                    
+                    r = rows[r]
+                    comp_id = r[0]
+                    comp_name = r[2]
+                    
+                    if comp_name == cur_name:
+                        break
+                
+                #print cur_name, cur_id, comp_id
+                
+                flag = True;
+                for m in master:
+                    m = master[m]
+                    if comp_id in m:
+                        flag = False
+                        m.append(cur_id)
+                if flag:
+                    master[m_index] = [comp_id,cur_id]    
+                    m_index += 1
+             
+            rows[cur_id] = row
+            names[cur_name] = i
+            row = cur.fetchone()
+            
+        for m in master:
+           print m, master[m]
+           
+        
             
 if __name__ == '__main__':
-    main()
+    #load()
+    match()
