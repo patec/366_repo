@@ -105,6 +105,30 @@ def load():
 
     con.commit()
     con.close()
+    
+def compare(master, row):    
+
+    r_type = r_name = r_dob = r_isop = r_gen = ''
+
+    if row[1] != None:
+        r_type = row[1]
+    if row[2] != None:
+        r_name = row[2]
+    if row[3] != None:
+        r_dob = row[3]
+    if row[4] != None:
+        r_isop = row[4]
+    if row[5] != None:
+        r_gen = row[5]
+    
+    # concat what were comparing
+    comp = r_type + r_name + r_dob + r_isop + r_gen          
+    
+    if comp in master:
+        return True, comp
+    
+    return False, comp
+    
 def match():
     
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
@@ -122,28 +146,14 @@ def match():
             
             row = rows[i]
             r_id = row[0]
-            r_type = row[1]
-            r_name = row[2]
+           
+            result, comp = compare(master, row)
             
-            # concat what were comparing, in this case name + type
-            comp = r_type + r_name
-            
-            if comp in master:
+            if result:
                 master[comp].append(r_id)
             else:
                 master[comp] = [r_id]
-            
-            #cur_id = row[0]
-            #cur_name = row[2]
-            
-            #if cur_name in names:
-            #    names[cur_name].append(cur_id)
-            #else:
-            #    names[cur_name] = [cur_id]
-    
-        #for n in names:
-        #    if len(names[n]) > 1:
-        #        print names[n]
+
         for m in master:
             m = master[m]
             if len(m) > 1:
