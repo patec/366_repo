@@ -105,7 +105,6 @@ def load():
 
     con.commit()
     con.close()
-
 def match():
     
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
@@ -115,49 +114,43 @@ def match():
         cur = con.cursor()
     
         cur.execute('SELECT * FROM SourceProviders')
-        
-        rows = {}
-        names = {}
+        rows = cur.fetchall()
+      
         master = {}
-        m_index = 1
         
-        row = cur.fetchone()
-        #i = 0
-        #while row:
-        for i in range(1,2000):
-            cur_id = row[0]
-            cur_name = row[2]
+        for i in range(len(rows)):
             
-            if cur_name in names:
-                
-                for r in rows:
-                    
-                    r = rows[r]
-                    comp_id = r[0]
-                    comp_name = r[2]
-                    
-                    if comp_name == cur_name:
-                        break
-                
-                #print cur_name, cur_id, comp_id
-                
-                flag = True;
-                for m in master:
-                    m = master[m]
-                    if comp_id in m:
-                        flag = False
-                        m.append(cur_id)
-                if flag:
-                    master[m_index] = [comp_id,cur_id]    
-                    m_index += 1
-             
-            rows[cur_id] = row
-            names[cur_name] = i
-            row = cur.fetchone()
+            row = rows[i]
+            r_id = row[0]
+            r_type = row[1]
+            r_name = row[2]
             
+            # concat what were comparing, in this case name + type
+            comp = r_type + r_name
+            
+            if comp in master:
+                master[comp].append(r_id)
+            else:
+                master[comp] = [r_id]
+            
+            #cur_id = row[0]
+            #cur_name = row[2]
+            
+            #if cur_name in names:
+            #    names[cur_name].append(cur_id)
+            #else:
+            #    names[cur_name] = [cur_id]
+    
+        #for n in names:
+        #    if len(names[n]) > 1:
+        #        print names[n]
         for m in master:
-           print m, master[m]
-           
+            m = master[m]
+            if len(m) > 1:
+                print m
+        print len(master)
+    
+    con.close()
         
             
 if __name__ == '__main__':
