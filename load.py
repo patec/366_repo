@@ -1,4 +1,5 @@
 import sys
+import hashlib
 import MySQLdb as mdb
 
 def load():
@@ -108,7 +109,7 @@ def load():
     
 def compare(master, row):    
 
-    r_type = r_name = r_dob = r_isop = r_gen = ''
+    r_type = r_name = r_dob = r_isop = r_gen = r_prime = r_sec = ''
 
     if row[1] != None:
         r_type = row[1]
@@ -120,10 +121,19 @@ def compare(master, row):
         r_isop = row[4]
     if row[5] != None:
         r_gen = row[5]
+    if row[6] != None:
+        r_prime = str(row[6])
+    if row[7] != None:
+        r_sec = str(row[7])
     
     # concat what were comparing
-    comp = r_type + r_name + r_dob + r_isop + r_gen          
+    # tabs so that we can split later if we want to
+    comp = r_type + r_name + r_dob + r_isop + r_gen + r_prime + r_sec          
     
+    comp = hashlib.sha1(comp).hexdigest()
+    
+    #for m in master:
+    #    if comp == m: # here is where we could do some more complex comparison
     if comp in master:
         return True, comp
     
@@ -141,6 +151,7 @@ def match():
         rows = cur.fetchall()
       
         master = {}
+        lookup = {}
         
         for i in range(len(rows)):
             
@@ -149,6 +160,8 @@ def match():
            
             result, comp = compare(master, row)
             
+            lookup[comp] = row
+            
             if result:
                 master[comp].append(r_id)
             else:
@@ -156,7 +169,7 @@ def match():
 
         for m in master:
             m = master[m]
-            if len(m) > 1:
+            if len(m) > 10:
                 print m
         print len(master)
     
