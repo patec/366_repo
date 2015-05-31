@@ -175,7 +175,53 @@ def match():
     
     con.close()
         
+
+def match2():
+
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
+
+    with con:
+       
+        cur = con.cursor()
+    
+        cur.execute('SELECT * FROM SourceProviders')
+        rows = cur.fetchall()
+      
+        master = []
+       
+        TOTAL = 2500
+       
+        for i in range(0, TOTAL):
+            master.append(rows[i])
+        
+        print len(master)
+        
+        
+        count = 0
+        match_count = 0
+        i = 0
+        while i < len(master):
+            row = master[i]
+            r_name = row[2]
+            j = i + 1
+            while j < len(master):
+                comp = master[j]
+                c_name = comp[2]
+                count += 1
+                
+                if r_name == c_name:
+                    match_count += 1
+                    master.pop(j)
+                    # always pop j, create master hash table entry with i
+                
+                j += 1
+            i += 1
+                
+        print 'comparisons: ' + str(count) 
+        print 'matches: ' + str(match_count) 
+    
+    con.close()
             
 if __name__ == '__main__':
     #load()
-    match()
+    match2()
