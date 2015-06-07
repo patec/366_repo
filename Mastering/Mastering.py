@@ -2,6 +2,17 @@ import MySQLdb as mdb
 from difflib import SequenceMatcher as SM
 import re
 import operator
+import json
+
+
+def get_config():
+    
+    f = open('./client.conf','r')
+    conf = f.read()
+    f.close()
+
+    conf = json.loads(conf)
+    return conf
 
 def fuzzy_match(orig, comp):
     seq = SM(None, orig, comp)
@@ -41,25 +52,25 @@ def checkAddress(r_street,r_city, r_country, r_county, r_postcode, r_unit, r_reg
     score = 0
     
     if r_street != None and c_street != None and r_street == c_street:
-      	score += 3
+      	score += CONFIG['street']
     
     if r_city != None and c_city != None and r_city == c_city:
-    	score += 1
+    	score += CONFIG['city']
         
     if r_country != None and c_country != None and r_country == c_country:
-    	score += 1
+    	score += CONFIG['country']
         
     if r_county != None and c_county != None and r_county == c_county:
-    	score += 1
+    	score += CONFIG['county']
         
     if r_postcode != None and c_postcode != None and r_postcode == c_postcode:
-    	score += 1
+    	score += CONFIG['postcode']
         
     if r_unit != None and c_unit != None and r_unit == c_unit:
-    	score += 1
+    	score += CONFIG['unit']
         
     if r_region != None and c_region != None and r_region == c_region:
-    	score += 1
+    	score += CONFIG['region']
     
     return score
     
@@ -211,36 +222,36 @@ def compare(row, comp):
     
     if c_name != None and r_name != None:
     	if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
-    		score += 6
+    		score += CONFIG['name']
     	elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
-            score += 5
+            score += CONFIG['name8']
         elif SM(None, c_name.lower(), r_name.lower()).ratio() <= .5:
-            score += -6
+            score += -CONFIG['name']
             return False, -1
     
     if r_isop != None and c_isop != None:
     	if  r_isop == c_isop:
-    		score += 1
+    		score += CONFIG['isop']
         else:
-        	score += -1
+        	score += -CONFIG['isop']
       
     if r_gender != None and c_gender != None:
     	if r_gender == c_gender:
-    		score += 1
+    		score += CONFIG['gender']
         else:
-        	score += -1
+        	score += -CONFIG['gender']
       
     if r_spec != None and c_spec != None:
     	if r_spec == c_spec:
-    		score += 1
+    		score += CONFIG['spec1']
       	else:
-        	score += -1
+        	score += -CONFIG['spec1']
             
     if r_spec2 != None and c_spec2 != None:
     	if r_spec2 == c_spec2:
-    		score += 1
+    		score += CONFIG['spec2']
       	else:
-        	score += -1
+        	score += -CONFIG['spec2']
             
     if r_phone != None and c_phone != None:
     	c_phoneClean = re.sub("[^0-9]", "", c_phone)
@@ -248,17 +259,15 @@ def compare(row, comp):
         
         
     	if r_phoneClean == c_phoneClean:
-    		score += 3
-      	else:
-        	"""
-        	score += -1
-            """
+    		score += CONFIG['phone']
+      	#else:
+        #	score += -CONFIG['phone']
       
     score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
     score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
     
     
-    if score > 8:
+    if score > CONFIG['match']:
     	return True, score
     else:
     	return False, score
@@ -380,4 +389,7 @@ def match():
     con.close()
 
 if __name__ == '__main__':
+
+    CONFIG = get_config()
+
     match()
