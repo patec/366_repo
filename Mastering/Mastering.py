@@ -1,6 +1,7 @@
 import MySQLdb as mdb
 from difflib import SequenceMatcher as SM
 import re
+import operator
 
 def fuzzy_match(orig, comp):
     seq = SM(None, orig, comp)
@@ -61,6 +62,73 @@ def checkAddress(r_street,r_city, r_country, r_county, r_postcode, r_unit, r_reg
     	score += 1
     
     return score
+    
+def parseName(n):
+    prefixes = ['Mr', 'Ms', 'Mrs', "Dr", 'Mr.', 'Ms.', 'Mrs.', 'Dr.', 'DR', 'DR.']
+    titles = ['LMT', 'MD', 'M.D.', 'FNP', 'OD', 'MRCP', 'DO', 'MED', 'LPC', 'DDS', 'LCSW-C', 'PHD', 'PA-C', 'NP', 'MA', 'APNP', 'FNP-C', 'DRPH']
+    suffixes = ['JR', 'SR', 'JR.', 'SR.', 'Jr', 'Sr', 'I', 'II', 'III', 'IV', 'V']
+    nameList = n.split(' ')
+    
+    prefixes = ''
+    credential = ''
+    first = ''
+    middle = ''
+    last = ''
+    suffix = ''
+    extra = ''
+    
+    for name in nameList:
+        for p in prefixes:
+            if name == p:
+                prefixes = name
+                nameList.remove(prefixes)
+                
+        for t in titles:
+            if name == t:
+                nameList.remove(name)
+                credential = name if len(credential) == 0 else ' ' + name
+                
+        for s in suffixes:
+                
+            if name == s:
+                nameList.remove(s)
+                suffix = name
+                
+        if name == '-' and nameList.index(name) != 0 and len(nameList) > nameList.index(name):
+            index = nameList.index(name)
+            nameList[index - 1] = nameList[index - 1] + '-' + nameList[index + 1]
+            nameList.pop(index) # pops -
+            nameList.pop(index) # pops second half of last name
+    
+    first = nameList[0] if len(nameList) > 0 else ''
+    last = nameList[1] if len(nameList) > 1 else ''
+    if len(nameList) > 2:
+        middle = last
+        last = nameList[2] if len(nameList) > 2 else ''
+    extra = nameList[3] if len(nameList) > 3 else ''
+    
+    if len(nameList) > 4:
+        print 'long name found: ' + ' '.join(nameList)
+    
+    return prefixes, credential, first, middle, last, suffix, extra
+    
+    
+def pickBest(matchList):
+    points = {}
+    
+    for person in matchList:
+        pts = 0
+        for attributes in person:
+            if attributes != None:
+                pts +=1
+        points[person] = pts
+    
+    sortedPoints = sorted(points.items(), key=operator.itemgetter(0))
+    
+    #for k in sortedPoints:
+        #print "k is: " + k
+
+
   
 def compare(row, comp):
     score = 0
@@ -139,9 +207,29 @@ def compare(row, comp):
     	return True, score
     else:
     	return False, score
+    	
+def nameTest():
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
+
+    with con:
+
+        cur = con.cursor()
       
+        cur.execute('''SELECT Name
+                       FROM SourceProviders as SP 
+                    ''')
+        rows = cur.fetchall()
+        
+        LIMIT = 20
+        for i in range(0, LIMIT):
+            print 'name: ' + rows[i][0]
+            prefixes, credential, first, middle, last, suffix, extra = parseName(rows[i][0])
+            print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
+          
+          
+          
 def match():
-    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
 
     with con:
 
@@ -153,6 +241,7 @@ def match():
                        FROM SourceProviders as SP, PhoneNumbers as PN, Addresses as A1, Addresses as A2 
                        WHERE SP.ID = PN.SourceID AND A1.SourceID = SP.ID AND A2.SourceID = SP.ID AND A1.Type = 'm' AND A2.type = 'p'
                     ''')
+        
         rows = cur.fetchall()
 
         tmp = []
@@ -160,7 +249,7 @@ def match():
         match = {}
         match_id = 0
 
-        TOTAL = 1000
+        TOTAL = 100
 
         for i in range(0, TOTAL):
             tmp.append(rows[i])
@@ -215,16 +304,21 @@ def match():
 
         print 'comparisons: ' + str(count)
         print 'matches: ' + str(match_count)
-
+        
+        
         for i in range(0,len(master)):
             r = master[i]
             r_len = len(r)
             if r_len > 1:
-               for j in range(0, r_len):
-                  print 'source id: ' + str(r[j][0]) 
-                  print 'name: ' + r[j][2]
-               print '----------'
-
+                for j in range(0, r_len):
+                    print 'source id: ' + str(r[j][0]) 
+                    # print 'name: ' + r[j][2]
+                    print '----------'
+                    prefixes, credential, first, middle, last, suffix, extra = parseName(rows[i][2])
+                    print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
+                pickBest(r)
+                
+        
 
     con.close()
 
