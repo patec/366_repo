@@ -2,17 +2,6 @@ import MySQLdb as mdb
 from difflib import SequenceMatcher as SM
 import re
 import operator
-import json
-
-
-def get_config():
-    
-    f = open('./client.conf','r')
-    conf = f.read()
-    f.close()
-
-    conf = json.loads(conf)
-    return conf
 
 def fuzzy_match(orig, comp):
     seq = SM(None, orig, comp)
@@ -52,25 +41,25 @@ def checkAddress(r_street,r_city, r_country, r_county, r_postcode, r_unit, r_reg
     score = 0
     
     if r_street != None and c_street != None and r_street == c_street:
-      	score += CONFIG['street']
+      	score += 3
     
     if r_city != None and c_city != None and r_city == c_city:
-    	score += CONFIG['city']
+    	score += 1
         
     if r_country != None and c_country != None and r_country == c_country:
-    	score += CONFIG['country']
+    	score += 1
         
     if r_county != None and c_county != None and r_county == c_county:
-    	score += CONFIG['county']
+    	score += 1
         
     if r_postcode != None and c_postcode != None and r_postcode == c_postcode:
-    	score += CONFIG['postcode']
+    	score += 1
         
     if r_unit != None and c_unit != None and r_unit == c_unit:
-    	score += CONFIG['unit']
+    	score += 1
         
     if r_region != None and c_region != None and r_region == c_region:
-    	score += CONFIG['region']
+    	score += 1
     
     return score
     
@@ -134,7 +123,10 @@ def pickBest(matchList):
                 pts +=1
         points[person] = pts
     
-    sortedPoints = sorted(points, key=lambda per: per[1])
+    sortedPoints = sorted(points, key=points.get, reverse=True)
+    
+    #for p in sortedPoints:
+    #    print points[p], person
     
     #master = sortedPoints[0]
     
@@ -181,7 +173,7 @@ def pickBest(matchList):
             index += 1
         
         if flag == 0:
-            master.append(None)
+            master.append('')
         
         
         
@@ -222,36 +214,36 @@ def compare(row, comp):
     
     if c_name != None and r_name != None:
     	if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
-    		score += CONFIG['name']
+    		score += 6
     	elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
-            score += CONFIG['name8']
+            score += 5
         elif SM(None, c_name.lower(), r_name.lower()).ratio() <= .5:
-            score += -CONFIG['name']
+            score += -6
             return False, -1
     
     if r_isop != None and c_isop != None:
     	if  r_isop == c_isop:
-    		score += CONFIG['isop']
+    		score += 1
         else:
-        	score += -CONFIG['isop']
+        	score += -1
       
     if r_gender != None and c_gender != None:
     	if r_gender == c_gender:
-    		score += CONFIG['gender']
+    		score += 1
         else:
-        	score += -CONFIG['gender']
+        	score += -1
       
     if r_spec != None and c_spec != None:
     	if r_spec == c_spec:
-    		score += CONFIG['spec1']
+    		score += 1
       	else:
-        	score += -CONFIG['spec1']
+        	score += -1
             
     if r_spec2 != None and c_spec2 != None:
     	if r_spec2 == c_spec2:
-    		score += CONFIG['spec2']
+    		score += 1
       	else:
-        	score += -CONFIG['spec2']
+        	score += -1
             
     if r_phone != None and c_phone != None:
     	c_phoneClean = re.sub("[^0-9]", "", c_phone)
@@ -259,15 +251,17 @@ def compare(row, comp):
         
         
     	if r_phoneClean == c_phoneClean:
-    		score += CONFIG['phone']
-      	#else:
-        #	score += -CONFIG['phone']
+    		score += 3
+      	else:
+        	"""
+        	score += -1
+            """
       
     score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
     score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
     
     
-    if score > CONFIG['match']:
+    if score > 8:
     	return True, score
     else:
     	return False, score
@@ -370,9 +364,11 @@ def match():
         print 'matches: ' + str(match_count)
         
         
+        f = open('Masters_EBDB.txt', 'w')
         for i in range(0,len(master)):
             r = master[i]
             r_len = len(r)
+            '''
             if r_len > 1:
                 for j in range(0, r_len):
                     print 'source id: ' + str(r[j][0]) 
@@ -383,13 +379,19 @@ def match():
                 master_record = pickBest(r)
             else:
                 master_record = r[0]
+            '''
+                
+            master_record = pickBest(r)
+            f.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + str(master_record[12]) + str(master_record[10]) + str(master_record[11]) + '\n')
+            #f.write(str(i) + '\t0' + master_record[0] + '\t1' + master_record[1] + '\t2' + master_record[2] + '\t3' + master_record[3] + '\t4' + master_record[4] + '\t5' + master_record[5] + '\t6' + master_record[6] + '\t7' + master_record[7] + '\t8' + master_record[8] + '\t9' + master_record[9] + '\t12' + str(master_record[12]) + '\t10' + str(master_record[10]) + '\t11' + str(master_record[11]) + '\n')
+        
+        f.close()
+            
+            
                 
         
 
     con.close()
 
 if __name__ == '__main__':
-
-    CONFIG = get_config()
-
     match()
