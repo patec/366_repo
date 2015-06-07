@@ -107,8 +107,8 @@ def parseName(n):
         last = nameList[2] if len(nameList) > 2 else ''
     extra = nameList[3] if len(nameList) > 3 else ''
     
-    if len(nameList) > 4:
-        print 'long name found: ' + ' '.join(nameList)
+    #if len(nameList) > 4:
+    #    print 'long name found: ' + ' '.join(nameList)
     
     return prefixes, credential, first, middle, last, suffix, extra
     
@@ -123,13 +123,68 @@ def pickBest(matchList):
                 pts +=1
         points[person] = pts
     
-    sortedPoints = sorted(points.items(), key=operator.itemgetter(0))
+    sortedPoints = sorted(points, key=lambda per: per[1])
     
-    #for k in sortedPoints:
-        #print "k is: " + k
+    #master = sortedPoints[0]
+    
+    #i = 0
+    master = []
+    master.append(sortedPoints[0][1])
+    
+    prefix = ''
+    credential = ''
+    first = ''
+    middle = ''
+    last = ''
+    suffix = ''
+    extra = ''
+    
+    
+    for sp in sortedPoints:
+        name_tup = parseName(sp[2])
+        prefix = name_tup[0] if prefix == '' else prefix
+        credential = name_tup[1] if credential == '' else credential
+        first = name_tup[2] if first == '' else first
+        middle = name_tup[3] if (middle == '' or (len(middle) == 1 and len(name_top[3] > 1))) else middle
+        last = name_tup[4] if last == '' else last
+        suffix = name_tup[5] if suffix == '' else suffix
+        extra = name_tup[6] if extra == '' else extra
+        
+    master.append(prefix)
+    master.append(first)
+    master.append(middle)
+    master.append(last)
+    master.append(suffix)
+    master.append(credential)
+    
+    for i in range(3,22):
+        flag = 0
+        index = 0
+        
+        for sp in sortedPoints:
+            if sp[i] != None:
+                master.append(sp[i])
+                #print "ADDED ATTRIBUTE TO MASTER", index, "sp[", i, "]=",sp[i]
+                flag = 1
+                break 
+            index += 1
+        
+        if flag == 0:
+            master.append(None)
+        
+        
+        
+        
+        
+    #print "***PRINTING ***"
+    #print "Master: ", master
+    #for sp in sortedPoints:
+    #    print "Candidate[",points[sp],"]: ", sp  
+        
+    return master 
 
 
-  
+
 def compare(row, comp):
     score = 0
 
@@ -314,9 +369,11 @@ def match():
                     print 'source id: ' + str(r[j][0]) 
                     # print 'name: ' + r[j][2]
                     print '----------'
-                    prefixes, credential, first, middle, last, suffix, extra = parseName(rows[i][2])
-                    print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
-                pickBest(r)
+                    #prefixes, credential, first, middle, last, suffix, extra = parseName(rows[i][2])
+                    #print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
+                master_record = pickBest(r)
+            else:
+                master_record = r[0]
                 
         
 
