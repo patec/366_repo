@@ -322,7 +322,7 @@ def match():
         
         rows = cur.fetchall()
 
-		cur.execute('''SELECT *
+        cur.execute('''SELECT *
                        FROM Addresses
                     ''')
 
