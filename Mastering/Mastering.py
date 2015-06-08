@@ -415,6 +415,7 @@ def match():
             #mfile.write(str(i) + '\t0' + master_record[0] + '\t1' + master_record[1] + '\t2' + master_record[2] + '\t3' + master_record[3] + '\t4' + master_record[4] + '\t5' + master_record[5] + '\t6' + master_record[6] + '\t7' + master_record[7] + '\t8' + master_record[8] + '\t9' + master_record[9] + '\t12' + str(master_record[12]) + '\t10' + str(master_record[10]) + '\t11' + str(master_record[11]) + '\n')
             for j in range(0, r_len):
                 cfile.write(str(i) + '\t' + str(r[j][0]) + '\n')
+                cur.execute('INSERT INTO Crosswalk(MasterId, SourceId) VALUES(%s, %s)', ((i + 1), str(r[j][0])))
        
        #     type = master_record[0]
        #     name = master_record[1] + master_record[2] + master_record[3] + master_record[4] + master_record[5] + master_record[6] 
