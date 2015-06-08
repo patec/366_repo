@@ -358,7 +358,7 @@ def match():
                 print i
 
             while j < len(tmp):
-                count += 5
+                count += 1
                 comp = tmp[j]
                 comp_id = comp[0]
 
