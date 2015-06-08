@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS SourceProviders(
 	DoB 			VARCHAR(20),
 	IsSoleProprietor	VARCHAR(1),
 	Gender			VARCHAR(1),
-	PrimarySpeciality	INT,
-	SecondarySpeciality	INT, 
+	PrimarySpeciality	VARCHAR(30),
+	SecondarySpeciality	VARCHAR(30), 
 	PRIMARY KEY(ID)
 	/*FOREIGN KEY(PrimarySpeciality) REFERENCES Specialities(ID),
 	FOREIGN KEY(SecondarySpeciality) REFERENCES Specialities(ID)*/
