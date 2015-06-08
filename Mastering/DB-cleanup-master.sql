@@ -1,5 +1,3 @@
-use cperry03;
-
 DROP TABLE IF EXISTS MasteredWorksAt;
 DROP TABLE IF EXISTS MasteredHasPhoneNumber;
 DROP TABLE IF EXISTS ReceivesMasteredMailAt;
