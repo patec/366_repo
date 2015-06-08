@@ -3,6 +3,8 @@ from difflib import SequenceMatcher as SM
 import re
 import operator
 import json
+import time
+import datetime
 
 def get_config():
 
@@ -431,8 +433,8 @@ def match():
         print 'matches: ' + str(match_count)
         
         
-        mfile = open('Masters_EBDB.txt', 'w')
-        cfile = open('Crosswalk_EBDB.txt', 'w')
+        mfile = open('Masters_' + time + '.txt', 'w')
+        cfile = open('Crosswalk_' + time + '.txt', 'w')
         for i in range(0,len(master)):
             r = master[i]
             r_len = len(r)
@@ -498,8 +500,21 @@ if __name__ == '__main__':
     #sql = open("DB-cleanup-master.sql").read()
     #cursor.execute(sql)
     #con.close()
-    
-    aMatchFile = open('Audit_Matches_EBDB.txt', 'w')
+
+    # Create groupstamp
+    time = datetime.datetime.fromtimestamp(time.time()).strftime('%H_%M_%S')
+
+    #Create Audit file for matches
+    aMatchFile = open('Audits_' + time + '.txt', 'w')
+
+    #Create README_EXTRACT
+    rFile = open('REAME_EXTRACT_' + time + '.txt','w')
+    rFile.write('The audits are found in Audits_<groupstamp>.txt\n')
+    rFile.write('The Format is: <SourceId of current provider> <tab> <Id of provider being compared if this is a comparison> <tab> <Info>\n')
+    rFile.write('For comparisons, Info states why each match was awarded points for pairs of providers that were combined') 
+    rFile.close()
     
     CONFIG = get_config()
     match()
+
+    aMatchFile.close()
