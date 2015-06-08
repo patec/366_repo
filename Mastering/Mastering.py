@@ -336,7 +336,8 @@ def nameTest():
             print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
           
 def addressfile(addr): 
-    afile = open('Address_EBDB.txt', 'w');
+    afile = open('Address_' + time + '.txt', 'w');
+    afile.write('SourceId\tType\tStreet\tUnit\tCity\tRegion\tPost Code\tCounty\tCountry\n')
     for i in range(0, len(addr)):
         if addr[i][1] == 'm':
             type = 'Mailing'
@@ -434,7 +435,10 @@ def match():
         
         
         mfile = open('Masters_' + time + '.txt', 'w')
+        mfile.write('ID\tType\tName Prefix\tFirst Name\tMiddle Name\tLast Name\tName Suffix\tCredentials\tGender\tDoB\tSole Prop.\tPhone\tPrimary Specialty\tSecondarySpecialty\n') 
+        
         cfile = open('Crosswalk_' + time + '.txt', 'w')
+        cfile.write('MasterId\tSourceId\n')
         for i in range(0,len(master)):
             r = master[i]
             r_len = len(r)
@@ -472,6 +476,8 @@ def match():
             for j in range(0, r_len):
                 cfile.write(str(i) + '\t' + str(r[j][0]) + '\n')
                 #cur.execute('INSERT INTO Crosswalk(MasterId, SourceId) VALUES(%s, %s)', ((i + 1), str(r[j][0])))
+
+
        
        #     type = master_record[0]
        #     name = master_record[1] + master_record[2] + master_record[3] + master_record[4] + master_record[5] + master_record[6] 
@@ -486,7 +492,7 @@ def match():
         mfile.close()
         cfile.close()
             
-            
+       
                 
         
 
@@ -506,6 +512,7 @@ if __name__ == '__main__':
 
     #Create Audit file for matches
     aMatchFile = open('Audits_' + time + '.txt', 'w')
+    aMatchFile.write('Provider\tComparison\tInfo\n') 
 
     #Create README_EXTRACT
     rFile = open('REAME_EXTRACT_' + time + '.txt','w')
