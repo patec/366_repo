@@ -201,6 +201,17 @@ def pickBest(matchList):
 def compare(row, comp):
     score = 0
 
+    #Match Auditing
+    a_name = 0
+    a_isop = 0
+    a_gender = 0
+    a_spec = 0
+    a_spec2 = 0
+    a_phone = 0
+    a_addr1 = 0
+    a_addr2 = 0
+    
+    
     r_type = row[1]
     r_name = row[2]
     r_dob = row[3]
@@ -223,59 +234,87 @@ def compare(row, comp):
         return False, -1
     
     if c_name != None and r_name != None:
-    	if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
-    		score += CONFIG['name']
-    	elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
+        if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
+            a_name = CONFIG['name']
+            score += CONFIG['name']
+        elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
             score += CONFIG['name8']
         elif SM(None, c_name.lower(), r_name.lower()).ratio() <= .5:
             score += -CONFIG['name']
             return False, -1
     
     if r_isop != None and c_isop != None:
-    	if  r_isop == c_isop:
-    		score += CONFIG['isop']
+        if  r_isop == c_isop:
+            a_isop = CONFIG['isop']
+            score += CONFIG['isop']
         else:
-        	score += -CONFIG['isop']
+            score += -CONFIG['isop']
       
     if r_gender != None and c_gender != None:
-    	if r_gender == c_gender:
-    		score += CONFIG['gender']
+        if r_gender == c_gender:
+            a_gender = CONFIG['gender']
+            score += CONFIG['gender']
         else:
-        	score += -CONFIG['gender']
+            score += -CONFIG['gender']
       
     if r_spec != None and c_spec != None:
-    	if r_spec == c_spec:
-    		score += CONFIG['spec1']
-      	else:
-        	score += -CONFIG['spec1']
+        if r_spec == c_spec:
+            a_spec = CONFIG['spec1']
+            score += CONFIG['spec1']
+        else:
+            score += -CONFIG['spec1']
             
     if r_spec2 != None and c_spec2 != None:
-    	if r_spec2 == c_spec2:
-    		score += CONFIG['spec2']
-      	else:
-        	score += -CONFIG['spec2']
+        if r_spec2 == c_spec2:
+            a_spec2 = CONFIG['spec2']
+            score += CONFIG['spec2']
+        else:
+            score += -CONFIG['spec2']
             
     if r_phone != None and c_phone != None:
-    	c_phoneClean = re.sub("[^0-9]", "", c_phone)
-    	r_phoneClean = re.sub("[^0-9]", "", r_phone)
+        c_phoneClean = re.sub("[^0-9]", "", c_phone)
+        r_phoneClean = re.sub("[^0-9]", "", r_phone)
         
         
-    	if r_phoneClean == c_phoneClean:
-    		score += CONFIG['phone']
-      	else:
-        	"""
-        	score += -1
+        if r_phoneClean == c_phoneClean:
+            a_phone = CONFIG['phone']
+            score += CONFIG['phone']
+        else:
+            """
+            score += -1
             """
       
-    score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
-    score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
+    a_addr1 = checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
+    a_addr2 = checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
+    score += a_addr1
+    score += a_addr2
+     
+    #score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
+    #score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
     
     
     if score > CONFIG['match']:
-    	return True, score
+        if a_name != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Name match: ' + str(a_name) + '\n')
+        if a_isop != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t ISOP match: ' + str(a_isop) + '\n')
+        if a_gender != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Gender match: ' + str(a_gender) + '\n')
+        if a_spec != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Prime Spec match: ' + str(a_spec) + '\n')
+        if a_spec2 != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Second Spec match: ' + str(a_spec2) + '\n')
+        if a_phone != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Phone match: ' + str(a_phone) + '\n')
+        if a_addr1 != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t M Addr match: ' + str(a_addr1) + '\n')
+        if a_addr2 != 0:
+            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t P Addr match: ' + str(a_addr2) + '\n')
+        
+        return True, score
     else:
-    	return False, score
-    	
+        return False, score
+        
 def nameTest():
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
 
