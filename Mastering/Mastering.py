@@ -410,16 +410,18 @@ def match():
             '''
                 
             master_record = pickBest(r)
+            cur.execute('INSERT INTO MasterProviders (Name, Type, Dob, IsSoleProprietor, Gender) VALUES(%s,%s,%s,%s,%s)', (master_record[1] + ' ' + master_record[2] + ' ' + master_record[3] + ' ' + master_record[4] + ' ' + master_record[5] + ' ' + master_record[6] , master_record[0], master_record[7], master_record[8], master_record[9]))
             mfile.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + '\t' + str(master_record[12]) + '\t' + str(master_record[10]) + '\t' + str(master_record[11]) + '\n')
             #mfile.write(str(i) + '\t0' + master_record[0] + '\t1' + master_record[1] + '\t2' + master_record[2] + '\t3' + master_record[3] + '\t4' + master_record[4] + '\t5' + master_record[5] + '\t6' + master_record[6] + '\t7' + master_record[7] + '\t8' + master_record[8] + '\t9' + master_record[9] + '\t12' + str(master_record[12]) + '\t10' + str(master_record[10]) + '\t11' + str(master_record[11]) + '\n')
             for j in range(0, r_len):
                 cfile.write(str(i) + '\t' + str(r[j][0]) + '\n')
+                cur.execute('INSERT INTO Crosswalk(MasterId, SourceId) VALUES(%s, %s)', ((i + 1), str(r[j][0])))
        
        #     type = master_record[0]
        #     name = master_record[1] + master_record[2] + master_record[3] + master_record[4] + master_record[5] + master_record[6] 
-       #     gender = master_record[7]
-       #     dob = master_record[8]
-       #     isop = master_record[9]             
+       #     dob = master_record[7]
+       #     isop = master_record[8]
+       #     gender = master_record[9]             
        #     spec1 = master_record[10]
        #     spec2 = master_record[11]
        #     phone = master_record[12]
@@ -435,5 +437,13 @@ def match():
     con.close()
 
 if __name__ == '__main__':
+	
+    # Reset Mastered tables
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
+    cursor = con.cursor()
+    sql = open("DB-cleanup-master.sql").read()
+    cursor.execute(sql)
+    con.close()
+    
     CONFIG = get_config()
     match()
