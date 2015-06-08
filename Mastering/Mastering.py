@@ -437,5 +437,13 @@ def match():
     con.close()
 
 if __name__ == '__main__':
+	
+    # Reset Mastered tables
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
+    cursor = con.cursor()
+    sql = open("DB-cleanup-master.sql").read()
+    cursor.execute(sql)
+    con.close()
+    
     CONFIG = get_config()
     match()
