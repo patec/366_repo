@@ -146,6 +146,9 @@ def pickBest(matchList):
     master = []
     master.append(sortedPoints[0][1])
     
+    #Supposed to audit chossing the best baseline for the master, but servers are down
+    #aMasterFile.write(master[?] + 'Set as baseline')
+    
     prefix = ''
     credential = ''
     first = ''
