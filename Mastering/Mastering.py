@@ -294,7 +294,17 @@ def nameTest():
             prefixes, credential, first, middle, last, suffix, extra = parseName(rows[i][0])
             print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
           
-          
+def addressfile(addr): 
+    afile = open('Address_EBDB.txt', 'w');
+    for i in range(0, len(addr)):
+        if addr[i][1] == 'm':
+            type = 'Mailing'
+        elif addr[i][1] == 'p':
+            type = 'Practice'
+        if addr[i][1] != None or addr[i][2] != None or addr[i][3] != None or addr[i][4] != None or addr[i][5] != None or addr[i][6] != None or addr[i][7] != None  or addr[i][8] != None:
+            afile.write(str(addr[i][0]) + '\t' + type + '\t' + str(addr[i][2]) + '\t' + str(addr[i][3]) + '\t' + str(addr[i][4]) + '\t' + str(addr[i][5]) + '\t' + str(addr[i][6]) + '\t' + str(addr[i][7]) + '\t' + str(addr[i][8]) + '\n')
+    afile.close(); 
+ 
           
 def match():
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
@@ -312,6 +322,13 @@ def match():
         
         rows = cur.fetchall()
 
+		cur.execute('''SELECT *
+                       FROM Addresses
+                    ''')
+
+        addr = cur.fetchall()    
+        addressfile(addr)
+		
         tmp = []
         master = []
         match = {}
