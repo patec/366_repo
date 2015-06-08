@@ -372,7 +372,8 @@ def match():
         master = []
         match = {}
         match_id = 0
-
+        phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+        
         TOTAL = 100
 
         for i in range(0, TOTAL):
@@ -447,10 +448,24 @@ def match():
             else:
                 master_record = r[0]
             '''
-                
+            
+            
+
+
+
+            
             master_record = pickBest(r)
+            
+            phone = master_record[12]
+            
+            if phone != None and phone != '':
+                c_phone = re.sub("\D", "", phone)
+                match = phonePattern.search(c_phone)
+                if match:
+                    phone = '(' + match.group(1) + ')-' + match.group(2) + '-' + match.group(3)
+            
             #cur.execute('INSERT INTO MasterProviders (Name, Type, Dob, IsSoleProprietor, Gender) VALUES(%s,%s,%s,%s,%s)', (master_record[1] + ' ' + master_record[2] + ' ' + master_record[3] + ' ' + master_record[4] + ' ' + master_record[5] + ' ' + master_record[6] , master_record[0], master_record[7], master_record[8], master_record[9]))
-            mfile.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + '\t' + str(master_record[12]) + '\t' + str(master_record[10]) + '\t' + str(master_record[11]) + '\n')
+            mfile.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + '\t' + phone + '\t' + str(master_record[10]) + '\t' + str(master_record[11]) + '\n')
             #mfile.write(str(i) + '\t0' + master_record[0] + '\t1' + master_record[1] + '\t2' + master_record[2] + '\t3' + master_record[3] + '\t4' + master_record[4] + '\t5' + master_record[5] + '\t6' + master_record[6] + '\t7' + master_record[7] + '\t8' + master_record[8] + '\t9' + master_record[9] + '\t12' + str(master_record[12]) + '\t10' + str(master_record[10]) + '\t11' + str(master_record[11]) + '\n')
             for j in range(0, r_len):
                 cfile.write(str(i) + '\t' + str(r[j][0]) + '\n')
@@ -483,6 +498,8 @@ if __name__ == '__main__':
     #sql = open("DB-cleanup-master.sql").read()
     #cursor.execute(sql)
     #con.close()
+    
+    aMatchFile = open('Audit_Matches_EBDB.txt', 'w')
     
     CONFIG = get_config()
     match()
