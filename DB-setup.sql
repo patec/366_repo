@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS SourceProviders(
 	ID			INT NOT NULL,
 	Type			VARCHAR(12) NOT NULL,
 	Name			VARCHAR(40),
+	Gender 			VARCHAR(20),
 	DoB 			VARCHAR(20),
 	IsSoleProprietor	VARCHAR(1),
-	Gender			VARCHAR(1),
 	PrimarySpeciality	VARCHAR(30),
 	SecondarySpeciality	VARCHAR(30), 
 	PRIMARY KEY(ID)
