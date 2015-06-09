@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS Addresses(
 	City			VARCHAR(50),
 	Country			VARCHAR(50),
 	County			VARCHAR(50),
-	PostCode		VARCHAR(9),
+	PostCode		VARCHAR(20),
 	Unit			VARCHAR(15),
 	Region			VARCHAR(20),
 	PRIMARY KEY(SourceID, Type),
