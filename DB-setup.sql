@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Specialities(
 CREATE TABLE IF NOT EXISTS SourceProviders(
 	ID			INT NOT NULL,
 	Type			VARCHAR(12) NOT NULL,
-	Name			VARCHAR(40),
+	Name			VARCHAR(100),
 	Gender 			VARCHAR(20),
 	DoB 			VARCHAR(20),
 	IsSoleProprietor	VARCHAR(1),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Addresses(
 	Country			VARCHAR(50),
 	County			VARCHAR(50),
 	PostCode		VARCHAR(20),
-	Unit			VARCHAR(15),
+	Unit			VARCHAR(60),
 	Region			VARCHAR(20),
 	PRIMARY KEY(SourceID, Type),
 	FOREIGN KEY(SourceID) REFERENCES SourceProviders(ID)

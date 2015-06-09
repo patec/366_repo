@@ -4,7 +4,7 @@ import MySQLdb as mdb
 
 def load():
 
-    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='jwilso43',passwd='abc123',db='jwilso43')
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='awcheung',passwd='cAkp3f7fg!',db='awcheung')
 
     with con:
        
@@ -94,12 +94,18 @@ def load():
             s_spec = cd[22] 
        
             cur.execute('INSERT INTO SourceProviders VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',(id,type,name,gender,dob,isp,p_spec,s_spec))
-            #if m_street != None or m_unit != None or m_city != None or m_region != None or m_postcode != None or m_county != None:
-            cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'m',m_street,m_city,m_country,m_postcode,m_unit,m_unit,m_region))
-            #if p_street != None or p_unit != None or p_city != None or p_region != None or p_postcode != None or p_county != None:
-            cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'p',p_street,p_city,p_country,p_postcode,p_unit,p_unit,p_region))
-            #if phone != None:
-            cur.execute('INSERT INTO PhoneNumbers VALUES(%s,%s)',(id,phone))
+
+            #INSERT mailing ADDRESS Statements if all other fields are not NULL
+            if m_street != None or m_unit != None or m_city != None or m_region != None or m_postcode != None or m_county != None:
+                cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'m', m_street, m_city, m_country, m_county, m_postcode, m_unit, m_region))
+
+            #INSERT ADDRESS Statements if all other fields are not NULL
+            if p_street != None or p_unit != None or p_city != None or p_region != None or p_postcode != None or p_county != None:
+                cur.execute('INSERT INTO Addresses VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,'p',p_street,p_city,p_country, p_county, p_postcode, p_unit,p_region))
+
+            #INSERT PhoneNumbers statement if phone is not NULL
+            if phone != None:
+                cur.execute('INSERT INTO PhoneNumbers VALUES(%s,%s)',(id,phone))
    
             if i % 1000 == 0:
                 print 'Inserted ' + str(i) + ' rows...'

@@ -129,6 +129,7 @@ def pickBest(matchList):
     points = {}
     
     for person in matchList:
+    #    print person
         pts = 0
         for attributes in person:
             if attributes != None:
@@ -163,7 +164,7 @@ def pickBest(matchList):
         prefix = name_tup[0] if prefix == '' else prefix
         credential = name_tup[1] if credential == '' else credential
         first = name_tup[2] if first == '' else first
-        middle = name_tup[3] if (middle == '' or (len(middle) == 1 and len(name_top[3] > 1))) else middle
+        middle = name_tup[3] if (middle == '' or (len(middle) == 1 and len(name_tup[3]) > 1)) else middle
         last = name_tup[4] if last == '' else last
         suffix = name_tup[5] if suffix == '' else suffix
         extra = name_tup[6] if extra == '' else extra
@@ -175,6 +176,7 @@ def pickBest(matchList):
     master.append(suffix)
     master.append(credential)
     
+
     for i in range(3,22):
         flag = 0
         index = 0
@@ -190,10 +192,21 @@ def pickBest(matchList):
         if flag == 0:
             master.append('')
         
+    soleProprietor = 'X'
+    #loop through matchlist to check if there is at least one person with isSoleProprietor = Y
+    #if there is set master isSoleProprietor to true 
+    #if there isSoleProprietor = N, set to N
+    #if neither for all persons in matchList set to X
+    for person in matchList:
+        curProprietor = person[5]
+        if curProprietor == 'Y':
+            soleProprietor = 'Y'
+            break;
+        elif curProprietor == 'N':
+            soleProprietor = 'N'
         
-        
-        
-        
+    master[5] = soleProprietor
+
     #print "***PRINTING ***"
     #print "Master: ", master
     #for sp in sortedPoints:
@@ -206,7 +219,7 @@ def pickBest(matchList):
 def compare(row, comp):
     score = 0
 
-    #Match Auditing
+    #Match Auditig
     a_name = 0
     a_isop = 0
     a_gender = 0
@@ -321,7 +334,7 @@ def compare(row, comp):
         return False, score
         
 def nameTest():
-    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='awcheung',passwd='cAkp3f7fg!',db='awcheung')
 
     with con:
 
@@ -352,21 +365,31 @@ def addressfile(addr):
  
           
 def match():
-    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
+    con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='awcheung',passwd='cAkp3f7fg!',db='awcheung')
 
     with con:
 
         cur = con.cursor()
-
-        cur.execute('''SELECT SP.*, PN.PhoneNumber,
-                       A1.Street, A1.City, A1.Country, A1.County, A1.PostCode, A1.Unit, A1.Region, 
-                       A2.Street, A2.City, A2.Country, A2.County, A2.PostCode, A2.Unit, A2.Region
-                       FROM SourceProviders as SP, PhoneNumbers as PN, Addresses as A1, Addresses as A2 
-                       WHERE SP.ID = PN.SourceID AND A1.SourceID = SP.ID AND A2.SourceID = SP.ID AND A1.Type = 'm' AND A2.type = 'p'
+ 
+        #old select statement where Addresses and Phonenumber has null values
+        #cur.execute('''SELECT SP.*, PN.PhoneNumber,
+        #               A1.Street, A1.City, A1.Country, A1.County, A1.PostCode, A1.Unit, A1.Region, 
+        #               A2.Street, A2.City, A2.Country, A2.County, A2.PostCode, A2.Unit, A2.Region
+        #               FROM SourceProviders as SP, PhoneNumbers as PN, Addresses as A1, Addresses as A2 
+        #               WHERE SP.ID = PN.SourceID AND A1.SourceID = SP.ID AND A2.SourceID = SP.ID AND A1.Type = 'm' AND A2.type = 'p'
+        #            ''')
+        cur.execute('''
+                    SELECT SP.*, PN.PhoneNumber,
+                           A1.Street, A1.City, A1.Country, A1.County, A1.PostCode, A1.Unit, A1.Region,
+                           A2.Street, A2.City, A2.Country, A2.County, A2.PostCode, A2.Unit, A2.Region
+                           FROM SourceProviders as SP
+                           LEFT JOIN PhoneNumbers PN ON SP.ID = PN.SourceID
+                           LEFT JOIN (SELECT * FROM Addresses WHERE Type = "m") A1 ON A1.SourceID = SP.ID
+                           LEFT JOIN (SELECT * FROM Addresses WHERE Type = "p") A2 ON A2.SourceID = SP.ID;
                     ''')
+
         
         rows = cur.fetchall()
-
         cur.execute('''SELECT *
                        FROM Addresses
                     ''')
@@ -380,12 +403,12 @@ def match():
         match_id = 0
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
         
-        TOTAL = 100
+        TOTAL = len(rows)
 
         for i in range(0, TOTAL):
             tmp.append(rows[i])
 
-        print len(tmp)
+        print "Entries evaluated: " + str(len(tmp))
 
         count = 0
         match_count = 0
@@ -497,7 +520,7 @@ def match():
             
        
                 
-        
+      
 
     con.close()
 

@@ -1,0 +1,243 @@
+Provider	Comparison	Info
+1	9644	 Gender match: 1
+1	9644	 Prime Spec match: 1
+1	9644	 M Addr match: 5
+4	35884	 Gender match: 1
+4	35884	 Prime Spec match: 1
+4	35884	 M Addr match: 7
+6	13719	 Gender match: 1
+6	13719	 Prime Spec match: 1
+6	13719	 M Addr match: 6
+9	6842	 Gender match: 1
+9	6842	 Prime Spec match: 1
+9	6842	 M Addr match: 6
+9	6842	 P Addr match: 6
+9	8411	 Gender match: 1
+9	8411	 Prime Spec match: 1
+9	8411	 M Addr match: 5
+9	8411	 P Addr match: 5
+9	41008	 Gender match: 1
+9	41008	 M Addr match: 5
+9	41008	 P Addr match: 6
+10	10806	 Gender match: 1
+10	10806	 Prime Spec match: 1
+10	10806	 Phone match: 3
+10	10806	 M Addr match: 7
+10	10806	 P Addr match: 5
+10	33107	 Gender match: 1
+10	33107	 Prime Spec match: 1
+10	33107	 M Addr match: 7
+10	33107	 P Addr match: 6
+10	33279	 Gender match: 1
+10	33279	 Prime Spec match: 1
+10	33279	 Phone match: 3
+10	33279	 M Addr match: 7
+10	33279	 P Addr match: 6
+10	37438	 Gender match: 1
+10	37438	 Prime Spec match: 1
+10	37438	 M Addr match: 6
+10	37438	 P Addr match: 6
+10	59845	 Gender match: 1
+10	59845	 Prime Spec match: 1
+10	59845	 M Addr match: 6
+10	59845	 P Addr match: 5
+11	43872	 Gender match: 1
+11	43872	 Prime Spec match: 1
+11	43872	 M Addr match: 5
+11	43872	 P Addr match: 6
+11	44307	 Gender match: 1
+11	44307	 Prime Spec match: 1
+11	44307	 M Addr match: 6
+11	44307	 P Addr match: 5
+11	59780	 Gender match: 1
+11	59780	 Prime Spec match: 1
+11	59780	 M Addr match: 6
+11	59780	 P Addr match: 6
+16	524	 Gender match: 1
+16	524	 M Addr match: 7
+16	524	 P Addr match: 6
+16	1874	 Gender match: 1
+16	1874	 M Addr match: 7
+16	1874	 P Addr match: 7
+16	22189	 Gender match: 1
+16	22189	 M Addr match: 5
+16	22189	 P Addr match: 7
+16	36073	 M Addr match: 7
+16	40658	 Gender match: 1
+16	40658	 Prime Spec match: 1
+16	40658	 M Addr match: 7
+16	40658	 P Addr match: 7
+17	14525	 Gender match: 1
+17	14525	 Prime Spec match: 1
+17	14525	 Second Spec match: 1
+17	14525	 M Addr match: 6
+17	14525	 P Addr match: 5
+17	15634	 Gender match: 1
+17	15634	 Prime Spec match: 1
+17	15634	 M Addr match: 6
+17	18501	 Gender match: 1
+17	18501	 Prime Spec match: 1
+17	18501	 M Addr match: 6
+17	18501	 P Addr match: 5
+17	20633	 Gender match: 1
+17	20633	 Prime Spec match: 1
+17	20633	 Phone match: 3
+17	20633	 M Addr match: 6
+17	20633	 P Addr match: 5
+17	23169	 Gender match: 1
+17	23169	 Prime Spec match: 1
+17	23169	 M Addr match: 6
+18	8024	 Gender match: 1
+18	8024	 Prime Spec match: 1
+18	8024	 M Addr match: 6
+18	51549	 Gender match: 1
+18	51549	 Prime Spec match: 1
+18	51549	 P Addr match: 7
+20	594	 Gender match: 1
+20	594	 Prime Spec match: 1
+20	594	 M Addr match: 5
+20	594	 P Addr match: 7
+22	26180	 Gender match: 1
+22	26180	 Prime Spec match: 1
+22	26180	 Phone match: 3
+22	26180	 M Addr match: 5
+22	26180	 P Addr match: 6
+25	17455	 Name match: 6
+25	17455	 Gender match: 1
+25	17455	 M Addr match: 6
+25	24356	 Gender match: 1
+25	24356	 Prime Spec match: 1
+25	24356	 Second Spec match: 1
+25	24356	 M Addr match: 6
+26	2342	 Gender match: 1
+26	2342	 Prime Spec match: 1
+26	2342	 M Addr match: 5
+26	2342	 P Addr match: 6
+27	31668	 Gender match: 1
+27	31668	 Prime Spec match: 1
+27	31668	 Phone match: 3
+27	31668	 P Addr match: 7
+28	21611	 Gender match: 1
+28	21611	 Prime Spec match: 1
+28	21611	 Second Spec match: 1
+28	21611	 M Addr match: 5
+28	21611	 P Addr match: 5
+28	23767	 Gender match: 1
+28	23767	 M Addr match: 6
+28	23767	 P Addr match: 5
+28	24544	 Gender match: 1
+28	24544	 M Addr match: 6
+28	24544	 P Addr match: 4
+28	37497	 Name match: 6
+28	37497	 Gender match: 1
+28	37497	 M Addr match: 5
+28	37497	 P Addr match: 5
+28	47168	 Gender match: 1
+28	47168	 Prime Spec match: 1
+28	47168	 Second Spec match: 1
+28	47168	 M Addr match: 5
+28	47168	 P Addr match: 5
+29	16334	 Gender match: 1
+29	16334	 Prime Spec match: 1
+29	16334	 M Addr match: 5
+29	16334	 P Addr match: 5
+29	17415	 Gender match: 1
+29	17415	 Prime Spec match: 1
+29	17415	 Second Spec match: 1
+29	17415	 M Addr match: 5
+29	17415	 P Addr match: 6
+29	42239	 Gender match: 1
+29	42239	 Prime Spec match: 1
+29	42239	 Second Spec match: 1
+29	42239	 M Addr match: 5
+29	42239	 P Addr match: 6
+29	43341	 Gender match: 1
+29	43341	 Prime Spec match: 1
+29	43341	 M Addr match: 5
+29	43341	 P Addr match: 6
+29	45190	 Name match: 6
+29	45190	 Gender match: 1
+29	45190	 Prime Spec match: 1
+29	45190	 M Addr match: 5
+29	45190	 P Addr match: 6
+31	15552	 Gender match: 1
+31	15552	 Prime Spec match: 1
+31	15552	 M Addr match: 7
+31	15552	 P Addr match: 6
+31	47556	 Gender match: 1
+31	47556	 Prime Spec match: 1
+31	47556	 M Addr match: 6
+31	47556	 P Addr match: 7
+32	19401	 Gender match: 1
+32	19401	 Prime Spec match: 1
+32	19401	 M Addr match: 6
+32	19401	 P Addr match: 7
+34	42561	 Gender match: 1
+34	42561	 Prime Spec match: 1
+34	42561	 M Addr match: 7
+35	3070	 Gender match: 1
+35	3070	 M Addr match: 5
+35	3070	 P Addr match: 7
+35	15898	 Gender match: 1
+35	15898	 Prime Spec match: 1
+35	15898	 M Addr match: 5
+35	15898	 P Addr match: 7
+35	50607	 Gender match: 1
+35	50607	 M Addr match: 5
+35	50607	 P Addr match: 7
+37	26523	 Gender match: 1
+37	26523	 Prime Spec match: 1
+37	26523	 M Addr match: 6
+37	26523	 P Addr match: 7
+38	2341	 Gender match: 1
+38	2341	 Prime Spec match: 1
+38	2341	 Second Spec match: 1
+38	2341	 M Addr match: 6
+38	25625	 Gender match: 1
+38	25625	 Prime Spec match: 1
+38	25625	 M Addr match: 7
+38	55478	 Gender match: 1
+38	55478	 Prime Spec match: 1
+38	55478	 M Addr match: 7
+40	5521	 Name match: 6
+40	5521	 Gender match: 1
+40	5521	 Phone match: 3
+40	5521	 P Addr match: 6
+43	31022	 Gender match: 1
+43	31022	 Prime Spec match: 1
+43	31022	 Second Spec match: 1
+43	31022	 M Addr match: 7
+43	56841	 Gender match: 1
+43	56841	 Prime Spec match: 1
+43	56841	 Second Spec match: 1
+43	56841	 M Addr match: 6
+45	4336	 Gender match: 1
+45	4336	 Phone match: 3
+45	4336	 M Addr match: 7
+45	4336	 P Addr match: 7
+45	7892	 Gender match: 1
+45	7892	 Phone match: 3
+45	7892	 M Addr match: 7
+45	7892	 P Addr match: 6
+45	9175	 Gender match: 1
+45	9175	 Second Spec match: 1
+45	9175	 M Addr match: 6
+45	9175	 P Addr match: 7
+45	15851	 Gender match: 1
+45	15851	 Phone match: 3
+45	15851	 M Addr match: 7
+45	20852	 Gender match: 1
+45	20852	 M Addr match: 7
+45	20852	 P Addr match: 7
+45	29806	 Gender match: 1
+45	29806	 Second Spec match: 1
+45	29806	 M Addr match: 7
+45	29806	 P Addr match: 7
+45	33384	 Gender match: 1
+45	33384	 Phone match: 3
+45	33384	 M Addr match: 7
+45	33384	 P Addr match: 7
+45	50785	 Gender match: 1
+45	50785	 Phone match: 3
+45	50785	 M Addr match: 6
+45	50785	 P Addr match: 7

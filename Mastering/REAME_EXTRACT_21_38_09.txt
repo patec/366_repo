@@ -1,0 +1,3 @@
+The audits are found in Audits_<groupstamp>.txt
+The Format is: <SourceId of current provider> <tab> <Id of provider being compared if this is a comparison> <tab> <Info>
+For comparisons, Info states why each match was awarded points for pairs of providers that were combined
