@@ -3,8 +3,6 @@ from difflib import SequenceMatcher as SM
 import re
 import operator
 import json
-import time
-import datetime
 
 def get_config():
 
@@ -146,9 +144,6 @@ def pickBest(matchList):
     master = []
     master.append(sortedPoints[0][1])
     
-    #Supposed to audit chossing the best baseline for the master, but servers are down
-    #aMasterFile.write(master[?] + 'Set as baseline')
-    
     prefix = ''
     credential = ''
     first = ''
@@ -163,7 +158,7 @@ def pickBest(matchList):
         prefix = name_tup[0] if prefix == '' else prefix
         credential = name_tup[1] if credential == '' else credential
         first = name_tup[2] if first == '' else first
-        middle = name_tup[3] if (middle == '' or (len(middle) == 1 and len(name_top[3] > 1))) else middle
+        middle = name_tup[3] if (middle == '' or (len(middle) == 1 and len(name_tup[3] > 1))) else middle
         last = name_tup[4] if last == '' else last
         suffix = name_tup[5] if suffix == '' else suffix
         extra = name_tup[6] if extra == '' else extra
@@ -206,17 +201,6 @@ def pickBest(matchList):
 def compare(row, comp):
     score = 0
 
-    #Match Auditing
-    a_name = 0
-    a_isop = 0
-    a_gender = 0
-    a_spec = 0
-    a_spec2 = 0
-    a_phone = 0
-    a_addr1 = 0
-    a_addr2 = 0
-    
-    
     r_type = row[1]
     r_name = row[2]
     r_dob = row[3]
@@ -239,87 +223,59 @@ def compare(row, comp):
         return False, -1
     
     if c_name != None and r_name != None:
-        if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
-            a_name = CONFIG['name']
-            score += CONFIG['name']
-        elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
+    	if SM(None, c_name.lower(), r_name.lower()).ratio() == 1:
+    		score += CONFIG['name']
+    	elif SM(None, c_name.lower(), r_name.lower()).ratio() >= .8:
             score += CONFIG['name8']
         elif SM(None, c_name.lower(), r_name.lower()).ratio() <= .5:
             score += -CONFIG['name']
             return False, -1
     
     if r_isop != None and c_isop != None:
-        if  r_isop == c_isop:
-            a_isop = CONFIG['isop']
-            score += CONFIG['isop']
+    	if  r_isop == c_isop:
+    		score += CONFIG['isop']
         else:
-            score += -CONFIG['isop']
+        	score += -CONFIG['isop']
       
     if r_gender != None and c_gender != None:
-        if r_gender == c_gender:
-            a_gender = CONFIG['gender']
-            score += CONFIG['gender']
+    	if r_gender == c_gender:
+    		score += CONFIG['gender']
         else:
-            score += -CONFIG['gender']
+        	score += -CONFIG['gender']
       
     if r_spec != None and c_spec != None:
-        if r_spec == c_spec:
-            a_spec = CONFIG['spec1']
-            score += CONFIG['spec1']
-        else:
-            score += -CONFIG['spec1']
+    	if r_spec == c_spec:
+    		score += CONFIG['spec1']
+      	else:
+        	score += -CONFIG['spec1']
             
     if r_spec2 != None and c_spec2 != None:
-        if r_spec2 == c_spec2:
-            a_spec2 = CONFIG['spec2']
-            score += CONFIG['spec2']
-        else:
-            score += -CONFIG['spec2']
+    	if r_spec2 == c_spec2:
+    		score += CONFIG['spec2']
+      	else:
+        	score += -CONFIG['spec2']
             
     if r_phone != None and c_phone != None:
-        c_phoneClean = re.sub("[^0-9]", "", c_phone)
-        r_phoneClean = re.sub("[^0-9]", "", r_phone)
+    	c_phoneClean = re.sub("[^0-9]", "", c_phone)
+    	r_phoneClean = re.sub("[^0-9]", "", r_phone)
         
         
-        if r_phoneClean == c_phoneClean:
-            a_phone = CONFIG['phone']
-            score += CONFIG['phone']
-        else:
-            """
-            score += -1
+    	if r_phoneClean == c_phoneClean:
+    		score += CONFIG['phone']
+      	else:
+        	"""
+        	score += -1
             """
       
-    a_addr1 = checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
-    a_addr2 = checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
-    score += a_addr1
-    score += a_addr2
-     
-    #score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
-    #score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
+    score += checkAddress(row[9], row[10], row[11], row[12], row[13], row[14], row[15], comp[9], comp[10], comp[11], comp[12], comp[13], comp[14], comp[15])
+    score += checkAddress(row[16], row[17], row[18], row[19], row[20], row[21], row[22], comp[16], comp[17], comp[18], comp[19], comp[20], comp[21], comp[22])
     
     
     if score > CONFIG['match']:
-        if a_name != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Name match: ' + str(a_name) + '\n')
-        if a_isop != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t ISOP match: ' + str(a_isop) + '\n')
-        if a_gender != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Gender match: ' + str(a_gender) + '\n')
-        if a_spec != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Prime Spec match: ' + str(a_spec) + '\n')
-        if a_spec2 != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Second Spec match: ' + str(a_spec2) + '\n')
-        if a_phone != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t Phone match: ' + str(a_phone) + '\n')
-        if a_addr1 != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t M Addr match: ' + str(a_addr1) + '\n')
-        if a_addr2 != 0:
-            aMatchFile.write(str(row[0]) + '\t' + str(comp[0]) + '\t P Addr match: ' + str(a_addr2) + '\n')
-        
-        return True, score
+    	return True, score
     else:
-        return False, score
-        
+    	return False, score
+    	
 def nameTest():
     con = mdb.connect(host='csc-db0.csc.calpoly.edu',user='ecobb',passwd='ebdb',db='ecobb')
 
@@ -339,8 +295,7 @@ def nameTest():
             print 'credential: ' + credential + '  prefixes: ' + prefixes + '  first: ' + first + '  middle: ' + middle + '  last: ' + last + '  suffix: ' + suffix + '  extra: ' + extra + '\n'
           
 def addressfile(addr): 
-    afile = open('Address_' + time + '.txt', 'w');
-    afile.write('SourceId\tType\tStreet\tUnit\tCity\tRegion\tPost Code\tCounty\tCountry\n')
+    afile = open('Address_EBDB.txt', 'w');
     for i in range(0, len(addr)):
         if addr[i][1] == 'm':
             type = 'Mailing'
@@ -378,9 +333,8 @@ def match():
         master = []
         match = {}
         match_id = 0
-        phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
-        
-        TOTAL = 100
+
+        TOTAL = 60000
 
         for i in range(0, TOTAL):
             tmp.append(rows[i])
@@ -401,7 +355,7 @@ def match():
 
             j = i + 1
             if i % 100 == 0:
-                print i
+                print '*** On index: ' + str(i) + ' ***'
 
             while j < len(tmp):
                 count += 1
@@ -421,7 +375,7 @@ def match():
                     else:
                         index = match[row_id]
                         match[comp_id] = index
-                        print index
+                        #print index
                         master[index].append(comp)
 
                     print '----- MATCH ' + str(score) + ' -----'
@@ -437,11 +391,8 @@ def match():
         print 'matches: ' + str(match_count)
         
         
-        mfile = open('Masters_' + time + '.txt', 'w')
-        mfile.write('ID\tType\tName Prefix\tFirst Name\tMiddle Name\tLast Name\tName Suffix\tCredentials\tGender\tDoB\tSole Prop.\tPhone\tPrimary Specialty\tSecondarySpecialty\n') 
-        
-        cfile = open('Crosswalk_' + time + '.txt', 'w')
-        cfile.write('MasterId\tSourceId\n')
+        mfile = open('Masters_EBDB.txt', 'w')
+        cfile = open('Crosswalk_EBDB.txt', 'w')
         for i in range(0,len(master)):
             r = master[i]
             r_len = len(r)
@@ -457,30 +408,15 @@ def match():
             else:
                 master_record = r[0]
             '''
-            
-            
-
-
-
-            
+                
             master_record = pickBest(r)
-            
-            phone = master_record[12]
-            
-            if phone != None and phone != '':
-                c_phone = re.sub("\D", "", phone)
-                match = phonePattern.search(c_phone)
-                if match:
-                    phone = '(' + match.group(1) + ')-' + match.group(2) + '-' + match.group(3)
-            
+            #print master_record
             #cur.execute('INSERT INTO MasterProviders (Name, Type, Dob, IsSoleProprietor, Gender) VALUES(%s,%s,%s,%s,%s)', (master_record[1] + ' ' + master_record[2] + ' ' + master_record[3] + ' ' + master_record[4] + ' ' + master_record[5] + ' ' + master_record[6] , master_record[0], master_record[7], master_record[8], master_record[9]))
-            mfile.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + '\t' + phone + '\t' + str(master_record[10]) + '\t' + str(master_record[11]) + '\n')
+            mfile.write(str(i) + '\t' + master_record[0] + '\t' + master_record[1] + '\t' + master_record[2] + '\t' + master_record[3] + '\t' + master_record[4] + '\t' + master_record[5] + '\t' + master_record[6] + '\t' + master_record[7] + '\t' + master_record[8] + '\t' + master_record[9] + '\t' + str(master_record[12]) + '\t' + str(master_record[10]) + '\t' + str(master_record[11]) + '\n')
             #mfile.write(str(i) + '\t0' + master_record[0] + '\t1' + master_record[1] + '\t2' + master_record[2] + '\t3' + master_record[3] + '\t4' + master_record[4] + '\t5' + master_record[5] + '\t6' + master_record[6] + '\t7' + master_record[7] + '\t8' + master_record[8] + '\t9' + master_record[9] + '\t12' + str(master_record[12]) + '\t10' + str(master_record[10]) + '\t11' + str(master_record[11]) + '\n')
             for j in range(0, r_len):
                 cfile.write(str(i) + '\t' + str(r[j][0]) + '\n')
                 #cur.execute('INSERT INTO Crosswalk(MasterId, SourceId) VALUES(%s, %s)', ((i + 1), str(r[j][0])))
-
-
        
        #     type = master_record[0]
        #     name = master_record[1] + master_record[2] + master_record[3] + master_record[4] + master_record[5] + master_record[6] 
@@ -495,7 +431,7 @@ def match():
         mfile.close()
         cfile.close()
             
-       
+            
                 
         
 
@@ -509,22 +445,6 @@ if __name__ == '__main__':
     #sql = open("DB-cleanup-master.sql").read()
     #cursor.execute(sql)
     #con.close()
-
-    # Create groupstamp
-    time = datetime.datetime.fromtimestamp(time.time()).strftime('%H_%M_%S')
-
-    #Create Audit file for matches
-    aMatchFile = open('Audits_' + time + '.txt', 'w')
-    aMatchFile.write('Provider\tComparison\tInfo\n') 
-
-    #Create README_EXTRACT
-    rFile = open('REAME_EXTRACT_' + time + '.txt','w')
-    rFile.write('The audits are found in Audits_<groupstamp>.txt\n')
-    rFile.write('The Format is: <SourceId of current provider> <tab> <Id of provider being compared if this is a comparison> <tab> <Info>\n')
-    rFile.write('For comparisons, Info states why each match was awarded points for pairs of providers that were combined') 
-    rFile.close()
     
     CONFIG = get_config()
     match()
-
-    aMatchFile.close()
